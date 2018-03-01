@@ -1,0 +1,9 @@
+# dcl1-11_miRNAseq
+#用序列号从NCBI上下载SRA文件，fastqdump转化成fastq
+#fastqc进行质量控制
+#trim_golare去掉adaptor和低质量reads
+#用bowtie比对到small_rna的index上，去掉tRNA，rRNA，sRNA和snoRNA，输出没有匹配上的reads到unmapped.fastq
+#unmapped.fastq比对到genome的index上，获得miRNA的序列reads
+#htseq_count计数，输出一个TXT文件，查看其中显示的完全匹配不完全匹配的reads数
+#或者用featureCounts进行计数，位置/bios-store1/program/subread-1.5.3-Linux-x86_64/bin/featureCounts
+#DEGseq是一个R包，用DEGexp函数可以方便地统计差异表达的基因/转录本
