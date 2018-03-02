@@ -7,3 +7,21 @@
 #htseq_count计数，输出一个TXT文件，查看其中显示的完全匹配不完全匹配的reads数
 #或者用featureCounts进行计数，位置/bios-store1/program/subread-1.5.3-Linux-x86_64/bin/featureCounts
 #DEGseq是一个R包，用DEGexp函数可以方便地统计差异表达的基因/转录本
+#2018年3月2日：
+#bin/sh
+set-e
+#trim过的fastq与smallRNA数据库比对，输出map的fastq，去掉smallRNA, tRNA,snoRNA
+bowtie2 -p 1 -L 8 -N 1 -x /bios-store1/arabidopsis_reference/Bowtie2Index_small_rna/small_rna_Chr -q ddm1-2-dcl1-11-2_trimmed.fq --un ddm1-2-dcl1-11-2_small_rna_unmapped.fastq
+bowtie2 -p 1 -L 8 -N 1 -x /bios-store1/arabidopsis_reference/Bowtie2Index_small_rna/small_rna_Chr -q ddm1-2-dcl1-11_trimmed.fq --un ddm1-2-dcl1-11_small_rna_unmapped.fastq
+bowtie2 -p 1 -L 8 -N 1 -x /bios-store1/arabidopsis_reference/Bowtie2Index_small_rna/small_rna_Chr -q ddm1-2-2_trimmed.fq --un ddm1-2-2_small_rna_unmapped.fastq
+#map过2的fastq与pri和mature数据库比对，输出Sam文件
+bowtie2 -p 1 -L 8 -N 1 -x /bios-store1/arabidopsis_reference/Bowtie2Index_microRNA_primary/primary -q ddm1-2_small_rna_unmapped.fastq -S ddm1-2_pri.sam
+bowtie2 -p 1 -L 8 -N 1 -x /bios-store1/arabidopsis_reference/Bowtie2Index_microRNA_primary/primary -q ddm1-2-2_small_rna_unmapped.fastq -S ddm1-2-2_pri.sam
+bowtie2 -p 1 -L 8 -N 1 -x /bios-store1/arabidopsis_reference/Bowtie2Index_microRNA_primary/primary -q ddm1-2-dcl1-11_small_rna_unmapped.fastq -S ddm1-2-dcl1-11_pri.sam
+bowtie2 -p 1 -L 8 -N 1 -x /bios-store1/arabidopsis_reference/Bowtie2Index_microRNA_primary/primary -q ddm1-2-dcl1-11-2_small_rna_unmapped.fastq -S ddm1-2-dcl1-11-2_pri.sam
+#
+bowtie2 -p 1 -L 8 -N 1 -x /bios-store1/arabidopsis_reference/Bowtie2Index_microRNA/micro -q ddm1-2_small_rna_unmapped.fastq -S ddm1-2_mature.sam
+bowtie2 -p 1 -L 8 -N 1 -x /bios-store1/arabidopsis_reference/Bowtie2Index_microRNA/micro -q ddm1-2-2_small_rna_unmapped.fastq -S ddm1-2-2_mature.sam
+bowtie2 -p 1 -L 8 -N 1 -x /bios-store1/arabidopsis_reference/Bowtie2Index_microRNA/micro -q ddm1-2-dcl1-11_small_rna_unmapped.fastq -S ddm1-2-dcl1-11_mature.sam
+bowtie2 -p 1 -L 8 -N 1 -x /bios-store1/arabidopsis_reference/Bowtie2Index_microRNA/micro -q ddm1-2-dcl1-11-2_small_rna_unmapped.fastq -S ddm1-2-dcl1-11-2_mature.sam
+echo "done"
